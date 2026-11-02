@@ -1,6 +1,13 @@
+import { useMovieContext } from "../context/MovieContext";
 export default function MovieCard({ movie }) {
-  function onFavoriteClick() {
-    alert("OUCH");
+  const { isFavorites, addToFavorites, removeFromFavorites } =
+    useMovieContext();
+  const favorites = isFavorites(movie.id);
+
+  function onFavoriteClick(e) {
+    e.preventDefault();
+    if (favorites) removeFromFavorites(movie.id);
+    else addToFavorites(movie);
   }
   return (
     <>
@@ -21,7 +28,7 @@ export default function MovieCard({ movie }) {
           )}
           <div className="movie-overlay">
             <button
-              className="favorite-btn"
+              className={`favorite-btn ${favorites ? "active" : ""}`}
               type="button"
               onClick={onFavoriteClick}
               aria-label={`Add ${movie.title} to favorites`}

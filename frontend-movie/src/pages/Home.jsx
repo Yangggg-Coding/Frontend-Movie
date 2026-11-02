@@ -20,7 +20,7 @@ export default function Home() {
         setLoading(false);
       }
     };
-    
+
     loadPopularMovies();
   }, []);
 
@@ -28,9 +28,25 @@ export default function Home() {
     movie.title.toLocaleLowerCase().startsWith(searchQuery.toLocaleLowerCase()),
   );
 
-  const handleSearch = (h) => {
+  const handleSearch = async (h) => {
     h.preventDefault();
+    if (!searchQuery.trim()) return;
+    if (loading) return;
+    setLoading(true);
+    
+    try {
+      const searchResult = await SearchMovies(searchQuery);
+      setMovies(searchResult);
+      setError(null);
+    } catch (err) {
+      console.log(err);
+      setError("Failed to search movies...");
+    } finally {
+      setLoading(false);
+    }
+    setSearchQuery("");
   };
+
   return (
     <section className="home-page" aria-labelledby="home-title">
       <header className="page-heading">
@@ -40,6 +56,7 @@ export default function Home() {
           Browse the collection and keep track of the films you want to see.
         </p>
       </header>
+
       <div className="home">
         <form onSubmit={handleSearch} className="search-form" role="search">
           <input
@@ -54,6 +71,7 @@ export default function Home() {
             Search
           </button>
         </form>
+
         <section aria-labelledby="movie-list-title">
           <div className="section-heading">
             <h2 id="movie-list-title">Movies</h2>
@@ -62,6 +80,9 @@ export default function Home() {
               {filteredMovies.length === 1 ? "film" : "films"}
             </span>
           </div>
+
+          {error && <div className="error-message">{error}</div>}
+
           {filteredMovies.length > 0 ? (
             <div className="movie-grid">
               {filteredMovies.map((movie) => (
