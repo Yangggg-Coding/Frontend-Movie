@@ -1,4 +1,4 @@
-export default function Favorite(){
+export default function Favorites(){
 
   return (<>
     <div className="favorite"></div>
