@@ -6,10 +6,16 @@ export default function MovieCard({ movie }) {
     <>
       <div className="movie-card">
         <div className="movie-poster">
-          {movie.url ? (
-            <img src={movie.url} alt={`${movie.title} poster`} />
+          {movie.poster_path ? (
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={`${movie.title} poster`}
+            />
           ) : (
-            <div className="movie-poster-placeholder" aria-label={`No poster for ${movie.title}`}>
+            <div
+              className="movie-poster-placeholder"
+              aria-label={`No poster for ${movie.title}`}
+            >
               <span>{movie.title}</span>
             </div>
           )}
@@ -24,7 +30,7 @@ export default function MovieCard({ movie }) {
         </div>
         <div className="movie-info">
           <h3>{movie.title}</h3>
-          <p>{movie.release_date}</p>
+          <p>{movie.release_date.split("-")[0]}</p>
         </div>
       </div>
     </>

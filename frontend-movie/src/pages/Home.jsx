@@ -1,10 +1,28 @@
 import MovieCard from "../components/MovieCards";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getPopularMovies, SearchMovies } from "../assets/services/api";
 
 export default function Home() {
-  const movies = [{ id: 1, title: "John Wick", release_date: 2026 }];
-
   const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (err) {
+        console.log(err);
+        setError("Failed to load movies...");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadPopularMovies();
+  }, []);
 
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLocaleLowerCase().startsWith(searchQuery.toLocaleLowerCase()),
@@ -40,7 +58,8 @@ export default function Home() {
           <div className="section-heading">
             <h2 id="movie-list-title">Movies</h2>
             <span className="result-count">
-              {filteredMovies.length} {filteredMovies.length === 1 ? "film" : "films"}
+              {filteredMovies.length}{" "}
+              {filteredMovies.length === 1 ? "film" : "films"}
             </span>
           </div>
           {filteredMovies.length > 0 ? (
