@@ -6,9 +6,20 @@ export default function MovieCard({ movie }) {
     <>
       <div className="movie-card">
         <div className="movie-poster">
-          <img src={movie.url} alt={movie.title} />
+          {movie.url ? (
+            <img src={movie.url} alt={`${movie.title} poster`} />
+          ) : (
+            <div className="movie-poster-placeholder" aria-label={`No poster for ${movie.title}`}>
+              <span>{movie.title}</span>
+            </div>
+          )}
           <div className="movie-overlay">
-            <button className="favorite-btn" onClick={onFavoriteClick}></button>
+            <button
+              className="favorite-btn"
+              type="button"
+              onClick={onFavoriteClick}
+              aria-label={`Add ${movie.title} to favorites`}
+            />
           </div>
         </div>
         <div className="movie-info">
